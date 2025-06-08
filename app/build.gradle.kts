@@ -7,9 +7,7 @@ plugins {
     id("com.github.johnrengelman.shadow") version "8.1.1"
 }
 
-application {
-    mainClass = 'hexlet.code.App'
-}
+application { mainClass = "hexlet.code.App" }
 
 group = "hexlet.code"
 version = "1.0-SNAPSHOT"
@@ -25,6 +23,8 @@ dependencies {
     implementation("io.javalin:javalin-rendering:5.6.4")
     testImplementation(platform("org.junit:junit-bom:5.10.0"))
     testImplementation("org.junit.jupiter:junit-jupiter")
+    implementation("com.h2database:h2:2.3.232")
+    implementation("com.zaxxer:HikariCP:6.3.0")
 }
 
 tasks.test {
