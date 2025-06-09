@@ -3,7 +3,6 @@ package hexlet.code;
 import java.sql.SQLException;
 import io.javalin.Javalin;
 import com.zaxxer.hikari.HikariConfig;
-import com.zaxxer.hikari.HikariDataSource;
 
 public class App {
 
