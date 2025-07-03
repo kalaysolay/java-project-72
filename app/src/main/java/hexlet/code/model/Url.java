@@ -10,10 +10,10 @@ import java.time.LocalDateTime;
 public class Url {
     private int id;
     private String name;
-    private LocalDateTime created_at;
+    private LocalDateTime createdAt;
 
     public Url(String name) {
         this.name = name;
-        this.created_at = LocalDateTime.now();
+        this.createdAt = LocalDateTime.now();
     }
 }
