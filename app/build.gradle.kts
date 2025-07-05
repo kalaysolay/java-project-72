@@ -18,20 +18,20 @@ repositories {
 }
 
 dependencies {
-    implementation("io.javalin:javalin:6.1.3")
-    implementation("gg.jte:jte:3.1.9")
-    implementation("io.javalin:javalin-rendering:6.1.3")
-    implementation("org.slf4j:slf4j-simple:2.0.7")
-    implementation("io.javalin:javalin-bundle:5.6.4")
-    implementation("io.javalin:javalin-rendering:5.6.4")
-
-    implementation("com.h2database:h2:2.3.232")
-    implementation("com.zaxxer:HikariCP:6.3.0")
+    implementation("com.h2database:h2:2.2.220")
     implementation("org.postgresql:postgresql:42.7.3")
-    annotationProcessor("org.projectlombok:lombok:1.18.32")
-
-    testImplementation(platform("org.junit:junit-bom:5.10.0"))
-    testImplementation("org.junit.jupiter:junit-jupiter")
+    implementation("com.zaxxer:HikariCP:5.0.1")
+    implementation("io.javalin:javalin:6.1.3")
+    implementation("org.slf4j:slf4j-simple:2.0.7")
+    implementation("io.javalin:javalin-bundle:6.1.3")
+    implementation("io.javalin:javalin-rendering:6.1.3")
+    implementation("gg.jte:jte:3.1.9")
+    implementation("com.konghq:unirest-java:3.13.0")
+    implementation("org.jsoup:jsoup:1.18.1")
+    testImplementation("org.assertj:assertj-core:3.25.3")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.2")
+    testImplementation("com.squareup.okhttp3:mockwebserver:4.12.0")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.10.2")
 }
 
 tasks.test {
