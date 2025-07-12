@@ -41,6 +41,11 @@ public class UrlCheckRepository extends BaseRepository {
      * @return the last UrlCheck object for the given URL ID
      */
     public static UrlCheck getUrlLastCheck(Long idUrl) {
+
+        var details = getEntityDetails(idUrl);
+        if (details.isEmpty()) {
+            return null;
+        }
         var urlLastCheck = UrlCheck.builder();
         if (!getEntityDetails(idUrl).isEmpty()) {
             var urlCheck = getEntityDetails(idUrl).get(0);
