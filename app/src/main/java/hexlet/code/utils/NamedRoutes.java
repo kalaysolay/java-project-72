@@ -27,7 +27,25 @@ public class NamedRoutes {
         return "/urls/" + id;
     }
 
+    /**
+     * роут страницы с конкретным УРЛом для проверки.
+     * @param id айди URL
+     * @return - возвращает роут /urls/id/checks
+     */
     public static String urlPath(Long id) {
         return urlPath(String.valueOf(id));
+    }
+
+    /**
+     * роут страницы с конкретным УРЛом для проверки.
+     * @param id айди URL
+     * @return - возвращает роут /urls/id/checks
+     */
+    public static String urlCheckPath(Long id) {
+        return urlCheckPath(String.valueOf(id));
+    }
+
+    public static String urlCheckPath(String id) {
+        return urlsPath().concat("/").concat(id).concat("/checks");
     }
 }

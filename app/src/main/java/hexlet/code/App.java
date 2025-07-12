@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 
 import com.zaxxer.hikari.HikariDataSource;
 import hexlet.code.controller.UrlController;
+import hexlet.code.controller.UrlsController;
 import hexlet.code.repository.BaseRepository;
 import hexlet.code.utils.NamedRoutes;
 import io.javalin.Javalin;
@@ -59,14 +60,15 @@ public class App {
             ctx.contentType("text/html; charset=utf-8");
         });*/
 
-        app.get(NamedRoutes.mainPagePath(), ctx -> ctx.render("index.jte"));
+        app.get(NamedRoutes.mainPagePath(), UrlController::indexStart);
         app.post(NamedRoutes.urlsPath(), UrlController::create);
         app.get(NamedRoutes.urlsPath(), UrlController::index);
         app.get(NamedRoutes.urlPath("{id}"), UrlController::show);
+        app.post(NamedRoutes.urlCheckPath("{id}"), UrlsController::create);
         return app;
     }
 
-    private static int getPort() {
+    public static int getPort() {
         String port = System.getenv().getOrDefault("PORT", "7070");
         return Integer.parseInt(port);
     }

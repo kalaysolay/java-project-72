@@ -17,7 +17,7 @@ public class UrlRepository extends BaseRepository {
             preparedStatement.executeUpdate();
             var generatedKeys = preparedStatement.getGeneratedKeys();
             if (generatedKeys.next()) {
-                url.setId(generatedKeys.getLong(1));
+                url.setId(generatedKeys.getLong("id"));
             } else {
                 throw new SQLException("DB have not returned an id after saving an entity");
             }
@@ -47,13 +47,19 @@ public class UrlRepository extends BaseRepository {
             if (resultSet.next()) {
                 var id = resultSet.getLong("id");
                 var createdAt = resultSet.getTimestamp("created_at");
-                //var createdAt = resultSet.getDate("created_at");
                 var url = new Url(id, name, createdAt);
                 return Optional.of(url);
             }
             return Optional.empty();
         }
     }
+
+    /**
+     * Retrieves all URLs from the database.
+     *
+     * @return a list of Url objects representing all URLs in the database.
+     * @throws SQLException if there is an error accessing the database.
+     */
     public static List<Url> getEntities() throws SQLException {
         var sql = "SELECT * FROM urls";
         try (var conn = dataSource.getConnection();
