@@ -26,7 +26,6 @@ public class UrlsController {
             var urlCheck = UrlCheck.builder()
                     .urlId(id)
                     .statusCode(code);
-
             var body = response.getBody();
             var doc = Jsoup.parse(body);
             urlCheck.title(doc.title());

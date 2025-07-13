@@ -25,7 +25,6 @@ public class App {
 
     public static void main(String[] args) throws SQLException, IOException {
         var app = getApp()
-               // .get("/", ctx -> ctx.result("Hello World"))
                 .start(getPort());
     }
 
@@ -56,10 +55,6 @@ public class App {
             config.bundledPlugins.enableDevLogging();
             config.fileRenderer(new JavalinJte(createTemplateEngine()));
         });
-       /* app.before(ctx -> {
-            ctx.contentType("text/html; charset=utf-8");
-        });*/
-
         app.get(NamedRoutes.mainPagePath(), UrlController::indexStart);
         app.post(NamedRoutes.urlsPath(), UrlController::create);
         app.get(NamedRoutes.urlsPath(), UrlController::index);
@@ -82,5 +77,4 @@ public class App {
         ResourceCodeResolver codeResolver = new ResourceCodeResolver("templates", classLoader);
         return TemplateEngine.create(codeResolver, ContentType.Html);
     }
-
 }
