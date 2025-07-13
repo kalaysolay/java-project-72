@@ -50,8 +50,10 @@ public class UrlController {
             ctx.consumeSessionAttribute("url-value");
             ctx.redirect(NamedRoutes.urlsPath());
         } catch (ValidationException e) {
-            var errorMessage = e.getErrors().entrySet().stream().findFirst()
-                    .get().getValue().getFirst().getMessage();
+            var errorEntryOpt = e.getErrors().entrySet().stream().findFirst();
+            String errorMessage = errorEntryOpt.isPresent()
+                    ? errorEntryOpt.get().getValue().getFirst().getMessage()
+                    : "Unknown validation error";
             ctx.sessionAttribute("flash", errorMessage);
             ctx.sessionAttribute("flash-type", "warning");
             ctx.sessionAttribute("url-value", ctx.formParam("url"));
