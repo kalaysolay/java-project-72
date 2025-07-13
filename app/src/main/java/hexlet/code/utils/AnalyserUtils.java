@@ -20,7 +20,7 @@ public class AnalyserUtils {
     public static String getVerifyUrl(String url) {
         try {
             var uri = new URI(url).toURL();
-            return uri.getProtocol().concat("://").concat(uri.getAuthority()).concat("/");
+            return uri.getProtocol().concat("://").concat(uri.getAuthority());//.concat("/");
         } catch (MalformedURLException | URISyntaxException e) {
             return "";
         }

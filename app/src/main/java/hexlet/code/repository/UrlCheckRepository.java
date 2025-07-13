@@ -10,9 +10,9 @@ public class UrlCheckRepository extends BaseRepository {
     public static void save(UrlCheck urlCheck) throws SQLException {
         var sql = """
                   INSERT INTO url_checks
-                      (url_id, status_code, h1, title, description)
+                      (url_id, status_code, h1, title, description, created_at)
                   VALUES
-                      (?, ?, ?, ?, ?)
+                      (?, ?, ?, ?, ?, now())
                 """;
         try (var conn = dataSource.getConnection();
              var preparedStatement = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
@@ -24,8 +24,15 @@ public class UrlCheckRepository extends BaseRepository {
             preparedStatement.executeUpdate();
             var generatedKeys = preparedStatement.getGeneratedKeys();
             if (generatedKeys.next()) {
-                urlCheck.setId(generatedKeys.getLong("id"));
-                urlCheck.setCreatedAt(generatedKeys.getTimestamp("created_at"));
+                long id = generatedKeys.getLong("id");
+                urlCheck.setId(id);
+                try (var stmt = conn.prepareStatement("SELECT created_at FROM url_checks WHERE id = ?")) {
+                    stmt.setLong(1, id);
+                    var rs = stmt.executeQuery();
+                    if (rs.next()) {
+                        urlCheck.setCreatedAt(rs.getTimestamp("created_at"));
+                    }
+                }
             } else {
                 throw new SQLException("DB did not return an id after saving an entity");
             }

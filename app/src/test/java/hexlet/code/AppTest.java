@@ -1,5 +1,6 @@
 package hexlet.code;
 
+import com.zaxxer.hikari.HikariDataSource;
 import hexlet.code.model.Url;
 import hexlet.code.repository.UrlCheckRepository;
 import hexlet.code.repository.UrlRepository;
@@ -14,6 +15,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Assertions;
 
+import static hexlet.code.repository.BaseRepository.dataSource;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -27,6 +29,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class AppTest {
@@ -103,11 +107,11 @@ public class AppTest {
         UrlRepository.save(url);
         UrlRepository.getEntities().forEach(u -> System.out.println(" - " + u.getName()));
 
-        String verifiedUrl = AnalyserUtils.getVerifyUrl("http://localhost:7070/");
+        String verifiedUrl = AnalyserUtils.getVerifyUrl("http://localhost:7070");
         JavalinTest.test(app, (server, client) -> {
             var response = client.get(NamedRoutes.urlPath(url.getId()));
             assertThat(response.code()).isEqualTo(200);
-            var urlTest = UrlRepository.findByName("http://localhost:7070/")
+            var urlTest = UrlRepository.findByName("http://localhost:7070")
                 .orElse(new Url("")).getName();
             System.out.println("URL urLTest: " + urlTest);
             assertThat(urlTest).contains("http://localhost:7070");
@@ -157,18 +161,16 @@ public class AppTest {
             assertThat(response.code()).isEqualTo(200);
 
             // Проверка, что URL добавлен в репозиторий
-            var urlOpt = UrlRepository.findByName("http://localhost:7070/");
+            var urlOpt = UrlRepository.findByName("http://localhost:7070");
             assertThat(urlOpt).isPresent();
 
             // Проверка, что URL отображается на странице /urls
             var listResponse = client.get(NamedRoutes.urlsPath());
             assertThat(listResponse.code()).isEqualTo(200);
             Assertions.assertNotNull(listResponse.body());
-            assertThat(listResponse.body().string()).contains("http://localhost:7070/");
+            assertThat(listResponse.body().string()).contains("http://localhost:7070");
         });
     }
-
-
 
     @Test
     public void testMockRunCheckUrl() throws SQLException, InterruptedException {
@@ -186,4 +188,40 @@ public class AppTest {
         });
     }
 
+    @Test
+    void testStore() {
+
+        String inputUrl = "https://ru.hexlet.io";
+
+        JavalinTest.test(app, (server, client) -> {
+            var requestBody = "url=" + inputUrl;
+            assertThat(client.post("/urls", requestBody).code()).isEqualTo(200);
+
+            var response = client.get("/urls");
+            assertThat(response.code()).isEqualTo(200);
+            assertThat(response.body().string())
+                    .contains(inputUrl);
+
+            var actualUrl = getUrlByName(dataSource, inputUrl);
+            System.out.println("TESTSTORE ACTUAL URL: " +actualUrl);
+            assertThat(actualUrl).isNotNull();
+            assertThat(actualUrl.get("name").toString()).isEqualTo(inputUrl);
+        });
+    }
+
+    public static Map<String, Object> getUrlByName(HikariDataSource dataSource, String url) throws SQLException {
+        var result = new HashMap<String, Object>();
+        var sql = "SELECT * FROM urls WHERE name = ?";
+        try (var conn = dataSource.getConnection();
+             var stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, url);
+            var resultSet = stmt.executeQuery();
+            if (resultSet.next()) {
+                result.put("id", resultSet.getLong("id"));
+                result.put("name", resultSet.getString("name"));
+                return result;
+            }
+            return null;
+        }
+    }
 }
