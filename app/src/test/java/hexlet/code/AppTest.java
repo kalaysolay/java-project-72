@@ -203,7 +203,7 @@ public class AppTest {
                     .contains(inputUrl);
 
             var actualUrl = getUrlByName(dataSource, inputUrl);
-            System.out.println("TESTSTORE ACTUAL URL: " +actualUrl);
+            System.out.println("TESTSTORE ACTUAL URL: " + actualUrl);
             assertThat(actualUrl).isNotNull();
             assertThat(actualUrl.get("name").toString()).isEqualTo(inputUrl);
         });
